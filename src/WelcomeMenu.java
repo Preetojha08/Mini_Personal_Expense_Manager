@@ -84,6 +84,8 @@ public class WelcomeMenu
             String Upassword = usersdetails.getUserPassword();
             double Uincome = usersdetails.getUserIncome();
             String Uloan = usersdetails.getUserLoan();
+            double UfixedExpense = usersdetails.getUserFixedExpense();
+            double UvarExpense = usersdetails.getUserVariableExpense();
 
             if (Uloan.equalsIgnoreCase("y") || Uloan.equalsIgnoreCase("Yes"))
             {
@@ -110,8 +112,8 @@ public class WelcomeMenu
             String prefixET = "_expenseTable";
             String expensetable = Uname.toLowerCase()+prefixET;
 
-            String insertQuery = "INSERT INTO User (username, userpassword, usermobile_no, usermail, userincome, userloan, userexpensetable) " +
-                    "VALUES(?, ?, ?, ?, ?, ?, ?)";
+            String insertQuery = "INSERT INTO User (username, userpassword, usermobile_no, usermail, userincome, userloan, userexpensetable,fixed_expense,var_expense) " +
+                    "VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
             //Creating a Prepared statement object
             ps = connection.prepareStatement(insertQuery);
@@ -122,6 +124,8 @@ public class WelcomeMenu
             ps.setDouble(5, Uincome);
             ps.setString(6, Uloan);
             ps.setString(7, expensetable);
+            ps.setDouble(8, UfixedExpense);
+            ps.setDouble(9, UvarExpense);
 
             // Executing the insertion query
             int rowsAffected = ps.executeUpdate();

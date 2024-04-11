@@ -12,6 +12,8 @@ public class Expense
     private static final String USERNAME = "root";
     private static final String PASSWORD = "Papa@2062";
 
+    double UpdatedIncome = 0;
+
     public Expense()
     {
         //Empty Constructor
@@ -45,12 +47,15 @@ public class Expense
 
     public Double getAmountExpense()
     {
-        Scanner scanner = new Scanner(System.in);
+
         boolean userExpenseAmountFlag = true;
         double expenseAmount=0;
 
+        UserInfo userInfo = new UserInfo();
+
         while (userExpenseAmountFlag)
         {
+            Scanner scanner = new Scanner(System.in);
             try
             {
                 System.out.print("\nEnter the Expense Amount: $");
@@ -71,8 +76,12 @@ public class Expense
                 System.out.println("Invalid Response for expense amount");
                 userExpenseAmountFlag = true;
             }
+
+            finally
+            {
+                scanner.close();
+            }
         }
-        scanner.close();
         return expenseAmount;
     }
 
@@ -80,21 +89,98 @@ public class Expense
     {
         String category = "";
         Scanner scanner = new Scanner(System.in);
-
         boolean expenseCatFlag=true;
-
-        while (expenseCatFlag)
+        try
         {
-            System.out.print("\nEnter the Expense Category: ");
-            category = scanner.nextLine();
-
-            if (category.equalsIgnoreCase("Fixed") || category.equalsIgnoreCase("Variable"))
+            while (expenseCatFlag)
             {
-                expenseCatFlag =false;
+                System.out.print("\nEnter the Expense Category: ");
+                category = scanner.nextLine();
+
+                if (category.equalsIgnoreCase("Fixed") || category.equalsIgnoreCase("Variable"))
+                {
+                    if (category.equalsIgnoreCase("Fixed"))
+                    {
+                        category = "Fixed Exp";
+                    }
+                    else
+                    {
+                        category="Variable Exp";
+                    }
+
+                    expenseCatFlag =false;
+                }
             }
         }
-        scanner.close();
+        catch (Exception e)
+        {
+            System.out.println(e.getMessage());
+        }
+        finally
+        {
+            scanner.close();
+        }
         return category;
+    }
+
+    public void UpdateIncome(double income)
+    {
+        Connection conn = null;
+        PreparedStatement stmt = null;
+
+        String name = userInfo.getUserName();
+        String id = userInfo.getUserID();
+
+        try
+        {
+            conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/expense_manager", "root", "root");
+            stmt = conn.prepareStatement("UPDATE user SET userincome =? WHERE username =? AND uid =? ");
+            stmt.setDouble(1, income);
+            stmt.setString(2, name);
+            stmt.setString(3,id);
+
+            stmt.executeUpdate();
+
+            int rowsUpdated = stmt.executeUpdate();
+            if (rowsUpdated > 0)
+            {
+                System.out.println("Income updated successfully for " +name);
+            }
+            else
+            {
+                System.out.println("No user found with " + name);
+            }
+
+        }
+        catch (SQLException e)
+        {
+            String s= e.getMessage();
+            System.out.println(s);
+        }
+        catch (Exception e)
+        {
+            String s= e.getMessage();
+            System.out.println(s);
+        }
+        finally
+        {
+            try
+            {
+                if (conn == null)
+                {
+                    conn.close();
+                }
+
+                if (stmt == null)
+                {
+                    stmt.close();
+                }
+            }
+            catch (SQLException e)
+            {
+                e.getMessage();
+            }
+        }
     }
 
     public boolean addExpenseData(Double amount,Double Rincome,String expenseCat,String expenseDecs)

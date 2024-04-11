@@ -35,11 +35,9 @@ public class MainMenu
         while(UpdateDetailsflag)
         {
             System.out.print("Enter You Choice: ");
-
             try
             {
                 int choice = scanner.nextInt();
-
                 switch (choice) {
                     case 1:
                         String name = userDetails.getUserName();
@@ -50,113 +48,45 @@ public class MainMenu
                         // Implement logic for Mobile No
                         break;
                     case 3:
-                        System.out.println("You chose Email");
                         String email = userDetails.getUserEmailID();
                         // Implement logic for Email
                         break;
                     case 4:
-                        System.out.println("You chose Password");
+                        String password = userDetails.getUserPassword();
                         // Implement logic for Password
                         break;
                     case 5:
-                        System.out.println("You chose Income");
+                        double income = userDetails.getUserIncome();
                         // Implement logic for Income
                         break;
                     case 6:
-                        System.out.println("You chose Loan");
+                        String loan = userDetails.getUserLoan();
                         // Implement logic for Loan
                         break;
                     case 7:
-                        System.out.println("You chose Fixed Expense");
+                        double fixedExpense = userDetails.getUserFixedExpense();
                         // Implement logic for Fixed Expense
                         break;
                     case 8:
-                        System.out.println("You chose Variable Expense");
+                        double variableExpense = userDetails.getUserVariableExpense();
                         // Implement logic for Variable Expense
                         break;
                     case 9:
-                        System.out.println("Exiting program. Goodbye!");
+                        System.out.println("Back To Main Menu");
+                        UpdateDetailsflag = false;
                         break;
                     default:
                         System.out.println("Invalid choice. Please enter a valid option.");
                 }
-
             }
             catch (Exception e)
             {
                 String s = e.getMessage();
+                System.out.println("Error: "+s);
             }
-
         }
-
     }
 
-    public void AddExpense()
-    {
-
-    }
-
-    public void UpdateIncome(double income)
-    {
-        Connection conn = null;
-        PreparedStatement stmt = null;
-
-        String name = userInfo.getUserName();
-        String id = userInfo.getUserID();
-
-        try
-        {
-            conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/expense_manager", "root", "root");
-            stmt = conn.prepareStatement("UPDATE user SET userincome =? WHERE username =? AND uid =? ");
-            stmt.setDouble(1, income);
-            stmt.setString(2, name);
-            stmt.setString(3,id);
-
-            stmt.executeUpdate();
-
-            int rowsUpdated = stmt.executeUpdate();
-            if (rowsUpdated > 0)
-            {
-                System.out.println("Income updated successfully for " +name);
-            }
-            else
-            {
-                System.out.println("No user found with " + name);
-            }
-
-        }
-        catch (SQLException e)
-        {
-            String s= e.getMessage();
-            System.out.println(s);
-        }
-        catch (Exception e)
-        {
-            String s= e.getMessage();
-            System.out.println(s);
-        }
-        finally
-        {
-            try
-            {
-                if (conn == null)
-                {
-                    conn.close();
-                }
-
-                if (stmt == null)
-                {
-                    stmt.close();
-                }
-            }
-            catch (SQLException e)
-            {
-                e.getMessage();
-            }
-
-        }
-
-    }
 
     public void BudgetPlanning()
     {

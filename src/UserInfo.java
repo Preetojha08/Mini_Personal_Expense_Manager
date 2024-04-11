@@ -10,6 +10,9 @@ public class UserInfo
     private static String userLoan;
     private static String userExpenseTable;
     private static String userID;
+    private static double userFixedExpense;
+    private static double userVarExpense;
+
 
     //------------------------------Getter Methods--------------------------------------------------------------------------------------
     public static String getUserID() {
@@ -44,6 +47,14 @@ public class UserInfo
         return userExpenseTable;
     }
 
+    public static double getUserFixedExpense() {
+        return userFixedExpense;
+    }
+
+    public static double getUserVarExpense() {
+        return userVarExpense;
+    }
+
     //------------------------------Setter Methods--------------------------------------------------------------------------------------
 
     public static void setUserID(String userID) {
@@ -76,6 +87,14 @@ public class UserInfo
 
     public static void setUserExpenseTable(String userExpenseTable) {
         UserInfo.userExpenseTable = userExpenseTable;
+    }
+
+    public static void setUserFixedExpense(double userFixedExpense) {
+        UserInfo.userFixedExpense = userFixedExpense;
+    }
+
+    public static void setUserVarExpense(double userVarExpense) {
+        UserInfo.userVarExpense = userVarExpense;
     }
 
 }

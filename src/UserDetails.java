@@ -219,6 +219,78 @@ public class UserDetails
         return userIncome;
     }
 
+    public Double getUserFixedExpense()
+    {
+        double userFixedExpense = 0.0;
+        boolean userFixedExpenseFlag=true;
+        //Get the user income and it should be verfied
+        while (userFixedExpenseFlag)
+        {
+            //just to vaild the input from the user
+            try
+            {
+                System.out.println("Enter the approximately fixed expenses amount: ");
+                userFixedExpense = scanner.nextDouble();
+
+                //Income should be greater than zero
+                if (userFixedExpense == 0 || userFixedExpense < 0 )
+                {
+                    //invalid response
+                    System.out.println("\nInvalid Amount(Zero or Less than Zero Not Possible ). Please enter a valid Expense amount.\n");
+                    userFixedExpenseFlag = true;
+                }
+                else
+                {
+                    userFixedExpenseFlag = false;
+                    //for vaild response and close the loop
+                }
+            }
+            catch (NumberFormatException nfe)
+            {
+                System.out.println("\nInvalid Amount Format. Please enter a valid email address.\n");
+                userFixedExpenseFlag  = true;
+            }
+        }
+        //scannerINC.close();
+        return userFixedExpense;
+    }
+
+    public Double getUserVariableExpense()
+    {
+        double userVariableExpense = 0.0;
+        boolean userVariableExpenseFlag=true;
+        //Get the user FE and it should be Verified
+        while (userVariableExpenseFlag)
+        {
+            //just to valid the input from the user
+            try
+            {
+                System.out.println("Enter the approximately fixed expenses amount: ");
+                userVariableExpense = scanner.nextDouble();
+
+                //Income should be greater than zero
+                if (userVariableExpense == 0 || userVariableExpense < 0 )
+                {
+                    //invalid response
+                    System.out.println("\nInvalid Amount(Zero or Less than Zero Not Possible ). Please enter a valid Expense amount.\n");
+                    userVariableExpenseFlag = true;
+                }
+                else
+                {
+                    userVariableExpenseFlag = false;
+                    //for valid response and close the loop
+                }
+            }
+            catch (NumberFormatException nfe)
+            {
+                System.out.println("\nInvalid Amount Format. Please enter a valid expense amount.\n");
+                userVariableExpenseFlag  = true;
+            }
+        }
+        //scannerINC.close();
+        return userVariableExpense;
+    }
+
     public void createExpenseTable(String userName,String password,String email,String phoneNO)
     {
         try
@@ -243,6 +315,8 @@ public class UserDetails
                 Double income = rs.getDouble("userincome");
                 String userID = rs.getString("uid");
                 String userloan = rs.getString("userloan");
+                double userfixedexpense = rs.getDouble("fixed_expense");
+                double uservarexpense = rs.getDouble("var_expense");
 
                 String poststringCreateTable = "_expensedata";
                 String finalExpenseTableName = userName.replaceAll("\\s", "")+poststringCreateTable;

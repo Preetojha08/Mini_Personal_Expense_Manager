@@ -11,7 +11,9 @@ public class Main
         Scanner scannerwm = new Scanner(System.in);
 
         WelcomeMenu welcome = new WelcomeMenu();
-
+        MainMenu mainmenu = new MainMenu();
+        Expense expense = new Expense();
+        UserInfo userinfo = new UserInfo();
 
         boolean WelcomeMenuExit = true;//used to check the exit status of welcome menu.
         boolean RegAfterLogin ;//used to check registration is completed than processed to login.
@@ -109,12 +111,21 @@ public class Main
                 switch (MainMenuChoice)
                 {
                     case 1:
-                        //updateDetails();
-                        System.out.println("User Detail function comes here");
+                        mainmenu.UpdateUserInfo();
                         break;
                     case 2:
                         //updateIncome();
-                        System.out.println("User Income Update function comes here");
+                        double expAmount=expense.getAmountExpense();
+                        String expCategory =expense.getExpenseCategory();
+                        String expDescription =expense.getExpenseDecs();
+                        double cureetIncome =userinfo.getUserIncome();
+                        double RIncome = cureetIncome - expAmount;
+                        boolean addexpenseFlag = expense.addExpenseData(expAmount,RIncome,expCategory,expDescription);
+                        if (addexpenseFlag)
+                        {
+                            expense.UpdateIncome(RIncome);
+                            userinfo.setUserIncome(RIncome);
+                        }
                         break;
                     case 3:
                         //addExpense();
