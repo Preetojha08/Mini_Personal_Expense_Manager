@@ -11,8 +11,10 @@ public class Expense
     private static final String JDBC_URL = "jdbc:mysql://localhost:3306/expensemanagerdb";
     private static final String USERNAME = "root";
     private static final String PASSWORD = "Papa@2062";
-
+    private static Scanner scanner = new Scanner(System.in);
     double UpdatedIncome = 0;
+    Connection conn = null;
+    PreparedStatement ps = null;
 
     public Expense()
     {
@@ -21,13 +23,12 @@ public class Expense
 
     public String getExpenseDecs()
     {
-        Scanner scanner = new Scanner(System.in);
         String expenseCategory ="";
         boolean ExpensesCategoriesFlag = true;
 
         while(ExpensesCategoriesFlag)
         {
-            System.out.print("\nEnter the Expense Category Name for the expense amount: ");
+            System.out.print("Enter the Expense description Name for the expense amount: ");
             expenseCategory = scanner.nextLine();
             if (expenseCategory == null || expenseCategory.length() == 0 || expenseCategory.length() == 1 || !expenseCategory.matches("^[^0-9]+$"))
             {
@@ -41,7 +42,6 @@ public class Expense
                 ExpensesCategoriesFlag = false;
             }
         }
-        scanner.close();
         return expenseCategory;
     }
 
@@ -51,11 +51,12 @@ public class Expense
         boolean userExpenseAmountFlag = true;
         double expenseAmount=0;
 
+        Scanner scanner = new Scanner(System.in);
+
         UserInfo userInfo = new UserInfo();
 
         while (userExpenseAmountFlag)
         {
-            Scanner scanner = new Scanner(System.in);
             try
             {
                 System.out.print("\nEnter the Expense Amount: $");
@@ -77,10 +78,6 @@ public class Expense
                 userExpenseAmountFlag = true;
             }
 
-            finally
-            {
-                scanner.close();
-            }
         }
         return expenseAmount;
     }
@@ -88,37 +85,34 @@ public class Expense
     public String getExpenseCategory()
     {
         String category = "";
-        Scanner scanner = new Scanner(System.in);
-        boolean expenseCatFlag=true;
-        try
+        boolean expenseCatFlag = true;
+
+        while (expenseCatFlag)
         {
-            while (expenseCatFlag)
+            try
             {
-                System.out.print("\nEnter the Expense Category: ");
+                System.out.print("Enter the Expense Category (Fixed/Variable): ");
                 category = scanner.nextLine();
 
-                if (category.equalsIgnoreCase("Fixed") || category.equalsIgnoreCase("Variable"))
+                if (category.equalsIgnoreCase("Fixed"))
                 {
-                    if (category.equalsIgnoreCase("Fixed"))
-                    {
-                        category = "Fixed Exp";
-                    }
-                    else
-                    {
-                        category="Variable Exp";
-                    }
-
-                    expenseCatFlag =false;
+                    category = "Fixed Exp";
+                    expenseCatFlag = false;
+                }
+                else if (category.equalsIgnoreCase("Variable"))
+                {
+                    category = "Variable Exp";
+                    expenseCatFlag = false;
+                }
+                else
+                {
+                    System.out.println("Invalid category. Please enter 'Fixed' or 'Variable'.");
                 }
             }
-        }
-        catch (Exception e)
-        {
-            System.out.println(e.getMessage());
-        }
-        finally
-        {
-            scanner.close();
+            catch (Exception e)
+            {
+                System.out.println(e.getMessage());
+            }
         }
         return category;
     }
@@ -186,23 +180,23 @@ public class Expense
     public boolean addExpenseData(Double amount,Double Rincome,String expenseCat,String expenseDecs)
     {
         boolean addExpenseDataFlag = false;
-        Connection conn = null;
-        PreparedStatement ps = null;
 
         String tableName = userInfo.getUserExpenseTable();
+
+        System.out.println(tableName+" "+amount+" "+Rincome+" "+expenseCat+" "+expenseDecs);
 
         try
         {
             conn = DriverManager.getConnection(JDBC_URL,USERNAME,PASSWORD);
 
-            String insertSQL = "INSERT INTO ? (amount, remaining_income, category, expense_dec) "+ "Values(?, ?, ?, ?)";
+            String insertSQL = "INSERT INTO "+tableName+" (amount, remaining_income, category, expense_desc) "+ "VALUES(?, ?, ?, ?)";
+            //String insertSQL = "INSERT INTO leet_expensetb (amount, remaining_income, category, expense_dec) "+ "VALUES(?, ?, ?, ?)";
 
             ps = conn.prepareStatement(insertSQL);
-            ps.setString(1,tableName);
-            ps.setDouble(2,amount);
-            ps.setDouble(3,Rincome);
-            ps.setString(4,expenseCat);
-            ps.setString(5,expenseDecs);
+            ps.setDouble(1,amount);
+            ps.setDouble(2,Rincome);
+            ps.setString(3,expenseCat);
+            ps.setString(4,expenseDecs);
 
             int rowsAffected = ps.executeUpdate();
             if (rowsAffected > 0)
@@ -219,6 +213,7 @@ public class Expense
         catch (SQLException e)
         {
             String s= e.getMessage();
+            e.printStackTrace();
             System.out.println(s);
         }
         finally

@@ -109,7 +109,7 @@ public class WelcomeMenu
                 }
 
             }
-            String prefixET = "_expenseTable";
+            String prefixET = "_expensedatatable";
             String expensetable = Uname.toLowerCase()+prefixET;
 
             String insertQuery = "INSERT INTO User (username, userpassword, usermobile_no, usermail, userincome, userloan, userexpensetable,fixed_expense,var_expense) " +

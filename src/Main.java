@@ -51,7 +51,11 @@ public class Main
                         if (RegAfterLogin)
                         {
                             System.out.println("Now Login with that information");
-                            welcome.userLogin();
+                            MainMenuCallFlag = welcome.userLogin();
+                            if(MainMenuCallFlag)
+                            {
+                                WelcomeMenuExit = false;
+                            }//End of IF
                         }//End of IF
                         break;
 
@@ -118,8 +122,9 @@ public class Main
                         double expAmount=expense.getAmountExpense();
                         String expCategory =expense.getExpenseCategory();
                         String expDescription =expense.getExpenseDecs();
-                        double cureetIncome =userinfo.getUserIncome();
-                        double RIncome = cureetIncome - expAmount;
+                        double curentIncome =userinfo.getUserIncome();
+                        double RIncome = curentIncome - expAmount;
+                        System.out.println(expAmount+" a"+expDescription+" b"+expCategory+" c"+RIncome+" d");
                         boolean addexpenseFlag = expense.addExpenseData(expAmount,RIncome,expCategory,expDescription);
                         if (addexpenseFlag)
                         {

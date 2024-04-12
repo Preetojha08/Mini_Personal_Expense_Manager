@@ -318,7 +318,7 @@ public class UserDetails
                 double userfixedexpense = rs.getDouble("fixed_expense");
                 double uservarexpense = rs.getDouble("var_expense");
 
-                String poststringCreateTable = "_expensedata";
+                String poststringCreateTable = "_expensedatatable";
                 String finalExpenseTableName = userName.replaceAll("\\s", "")+poststringCreateTable;
                 String createSQLQ = "Create Table "+ finalExpenseTableName +" (expense_id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,amount DOUBLE,remaining_income DOUBLE,category VARCHAR(100),expense_desc VARCHAR(200))";
 
