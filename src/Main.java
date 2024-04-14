@@ -2,8 +2,7 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.util.Scanner;
 
-// Press Shift twice to open the Search Everywhere dialog and type `show whitespaces`,
-// then press Enter. You can now see whitespace characters in your code.
+
 public class Main
 {
     public static void main(String[] args)
@@ -38,6 +37,7 @@ public class Main
                 {
                     case 1:
                         //user Login function call;
+                        System.out.println("\nUser Login Process");
                         MainMenuCallFlag = welcome.userLogin();
                         if(MainMenuCallFlag)
                         {
@@ -47,10 +47,10 @@ public class Main
 
                     case 2:
                         //user Registration call;
+                        System.out.println("\nNew User Registration Process");
                         RegAfterLogin = welcome.userRegistration();
                         if (RegAfterLogin)
                         {
-                            System.out.println("Now Login with that information");
                             MainMenuCallFlag = welcome.userLogin();
                             if(MainMenuCallFlag)
                             {
@@ -124,35 +124,32 @@ public class Main
                         String expDescription =expense.getExpenseDecs();
                         double curentIncome =userinfo.getUserIncome();
                         double RIncome = curentIncome - expAmount;
-                        System.out.println(expAmount+" a"+expDescription+" b"+expCategory+" c"+RIncome+" d");
                         boolean addexpenseFlag = expense.addExpenseData(expAmount,RIncome,expCategory,expDescription);
+                        System.out.println(addexpenseFlag);
                         if (addexpenseFlag)
                         {
                             expense.UpdateIncome(RIncome);
+                            System.out.println("Helloworld preet");
                             userinfo.setUserIncome(RIncome);
                         }
                         break;
                     case 3:
                         //addExpense();
-                        System.out.println("Add Expense Function comes here");
+                        mainmenu.ViewEexpenseData();
                         break;
                     case 4:
-                        //addOtherIncome();
-                        System.out.println("Add Other Income Function comes here");
+                        //budgetPlanning();
+                        System.out.println("View Saving of the USer here");
                         break;
                     case 5:
-                        //viewTransactionHistory();
-                        System.out.println("View Transaction History Function comes here");
+                        //budgetPlanning();
+                        System.out.println("View Budget Planning Tips comes here");
                         break;
                     case 6:
-                        //budgetPlanning();
-                        System.out.println("View Budget Planning Function comes here");
-                        break;
-                    case 7:
                         //logout();
                         System.out.println("User Logout Function comes here");
                         break;
-                    case 8:
+                    case 7:
                         System.out.println("Exiting program. Goodbye!");
                         MainMenuExit=false;
                         break;

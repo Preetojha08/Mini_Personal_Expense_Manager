@@ -1,9 +1,12 @@
+import com.mysql.cj.log.Log;
+
 import java.net.URI;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.Scanner;
+import java.util.logging.Logger;
 
 public class Expense
 {
@@ -12,6 +15,7 @@ public class Expense
     private static final String USERNAME = "root";
     private static final String PASSWORD = "Papa@2062";
     private static Scanner scanner = new Scanner(System.in);
+    Log log;
     double UpdatedIncome = 0;
     Connection conn = null;
     PreparedStatement ps = null;
@@ -119,26 +123,24 @@ public class Expense
 
     public void UpdateIncome(double income)
     {
-        Connection conn = null;
-        PreparedStatement stmt = null;
 
         String name = userInfo.getUserName();
         String id = userInfo.getUserID();
 
         try
         {
-            conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/expense_manager", "root", "root");
-            stmt = conn.prepareStatement("UPDATE user SET userincome =? WHERE username =? AND uid =? ");
-            stmt.setDouble(1, income);
-            stmt.setString(2, name);
-            stmt.setString(3,id);
+            conn = DriverManager.getConnection(JDBC_URL, USERNAME, PASSWORD);
+            ps = conn.prepareStatement("UPDATE user SET userincome =? WHERE username =? AND uid =? ");
+            ps.setDouble(1, income);
+            ps.setString(2, name);
+            ps.setString(3,id);
 
-            stmt.executeUpdate();
+            ps.executeUpdate();
 
-            int rowsUpdated = stmt.executeUpdate();
+            int rowsUpdated = ps.executeUpdate();
             if (rowsUpdated > 0)
             {
-                System.out.println("Income updated successfully for " +name);
+                log.logDebug("Income updated successfully for " +name);
             }
             else
             {
@@ -149,6 +151,7 @@ public class Expense
         catch (SQLException e)
         {
             String s= e.getMessage();
+            e.printStackTrace();
             System.out.println(s);
         }
         catch (Exception e)
@@ -165,9 +168,9 @@ public class Expense
                     conn.close();
                 }
 
-                if (stmt == null)
+                if (ps == null)
                 {
-                    stmt.close();
+                    ps.close();
                 }
             }
             catch (SQLException e)
@@ -180,11 +183,10 @@ public class Expense
     public boolean addExpenseData(Double amount,Double Rincome,String expenseCat,String expenseDecs)
     {
         boolean addExpenseDataFlag = false;
-
         String tableName = userInfo.getUserExpenseTable();
 
-        System.out.println(tableName+" "+amount+" "+Rincome+" "+expenseCat+" "+expenseDecs);
-
+        conn=null;
+        ps=null;
         try
         {
             conn = DriverManager.getConnection(JDBC_URL,USERNAME,PASSWORD);
@@ -201,7 +203,9 @@ public class Expense
             int rowsAffected = ps.executeUpdate();
             if (rowsAffected > 0)
             {
-                System.out.println("New Expense added Successfully!");
+                System.out.println("Expense Added Successfully!");
+                UpdateIncome(Rincome);
+                userInfo.setUserIncome(Rincome);
             }
             else
             {
@@ -231,7 +235,7 @@ public class Expense
             }
             catch (SQLException e)
             {
-                //e.printStackTrace();
+                e.printStackTrace();
                 e.getMessage();
             }
         }

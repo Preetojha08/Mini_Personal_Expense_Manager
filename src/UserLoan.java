@@ -17,9 +17,8 @@ public class UserLoan
         boolean amountLoanFlag = true;
         while(amountLoanFlag)
         {
-            System.out.println("\nEnter the LOAN amount you have taken: ");
+            System.out.print("Enter the LOAN amount you have taken: ");
             amountLoan = scanner.nextDouble();
-
             //vaild response
             if(amountLoan > 0.0)
             {
@@ -41,8 +40,7 @@ public class UserLoan
         boolean loanPendingFlag = true;
         while(loanPendingFlag)
         {
-            System.out.println(MainAmountLoan);
-            System.out.println("\nEnter the LOAN pending amount: ");
+            System.out.print("Enter the LOAN pending amount: ");
             loanPending = scanner.nextDouble();
 
             //vaild response

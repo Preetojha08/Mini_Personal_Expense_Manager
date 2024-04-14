@@ -1,5 +1,8 @@
+import com.mysql.cj.log.Log;
+
 import java.sql.*;
 import java.util.Scanner;
+import java.util.logging.Logger;
 
 public class WelcomeMenu
 {
@@ -7,7 +10,7 @@ public class WelcomeMenu
     UserDetails usersdetails = new UserDetails();
     UserLoan userLoan = new UserLoan();
 
-
+    Log log ;
     private static final String JDBC_URL = "jdbc:mysql://localhost:3306/expensemanagerdb";
     private static final String USERNAME = "root";
     private static final String PASSWORD = "Papa@2062";
@@ -89,9 +92,10 @@ public class WelcomeMenu
 
             if (Uloan.equalsIgnoreCase("y") || Uloan.equalsIgnoreCase("Yes"))
             {
+                System.out.println("Loan Information\n");
                 double loanAmount = userLoan.getLoanAmount();
                 double loanPendingAmount = userLoan.getLoanPendingAmount();
-                double loanPaidAmount = userLoan.getLoanPendingAmount();
+                double loanPaidAmount = loanAmount - loanPendingAmount;
 
                 String loanInsertQuery = "INSERT INTO loan (username,mobile_number,loan_amount,pending_amount,paid_amount) "+ "VALUES(?, ?, ?, ?, ?)";
                 ps = connection.prepareStatement(loanInsertQuery);
@@ -105,7 +109,7 @@ public class WelcomeMenu
 
                 if (rowsAffected > 0)
                 {
-                    System.out.println("Data added Successfully to Loan Table!");
+                    log.logDebug("Data added Successfully to Loan Table");
                 }
 
             }
@@ -131,13 +135,13 @@ public class WelcomeMenu
             int rowsAffected = ps.executeUpdate();
             if (rowsAffected > 0)
             {
-                System.out.println("New User added Successfully!");
+                System.out.println("Thank You "+Uname+", for Registration Now Login with that INFO");
                 userResgistrationStatus=true;
                 usersdetails.createExpenseTable(Uname,Upassword,Uemail,UmobileNo);
             }
             else
             {
-                System.out.println("Failed to add new User.");
+                System.out.println("Failed to Register new User.");
                 userResgistrationStatus=false;
             }
         }

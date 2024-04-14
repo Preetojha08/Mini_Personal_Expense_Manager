@@ -22,13 +22,14 @@ public class UserDetails
         boolean userLoanFlag = true;
         while(userLoanFlag)
         {
-            System.out.println("Do You have any kind of Loan(Yes/NO):");
-            userLoan = scanner.nextLine();
+            System.out.print("Do You have any kind of Loan(Yes/NO):");
+            String userLoan1 = scanner.nextLine();
 
             //check the loan user inpu must be yes or no nothing else.
-            if(userLoan.equalsIgnoreCase("Yes") || userLoan.equalsIgnoreCase("NO") || userLoan.equalsIgnoreCase("Y") || userLoan.equalsIgnoreCase("Yes"))
+            if(userLoan1.equalsIgnoreCase("Yes") || userLoan1.equalsIgnoreCase("NO") || userLoan.equalsIgnoreCase("Y") || userLoan.equalsIgnoreCase("Yes"))
             {
                 userLoanFlag = false;
+                userLoan = userLoan1;
             }
             else
             {
@@ -48,21 +49,21 @@ public class UserDetails
 
         while (userNameflag)
         {
-            System.out.println("Enter the User Name: ");
+            System.out.print("\nEnter the User Name: ");
             userName = scanner.nextLine();
 
             //checks the value of userName has to be not null and not empty and does not contain numbers in it.
             if (userName == null || userName.length() == 0 || userName.length() == 1 || !userName.matches("^[^0-9]+$"))
             {
                 //invalid response
-                System.out.print("\nInvaild User Name type it Again \n");
+                System.out.print("Invalid User Name type it Again.");
                 userNameflag = true;
             }
             //valid response
             else
             {
                 userNameflag = false;
-                //for vaild response and close the loop
+                //for valid response and close the loop
             }
         }
         //scanner.close();
@@ -79,11 +80,11 @@ public class UserDetails
 
         //Get the both Password 1 and Password 2 from the user
         //define the password rules and take password from the user.
-        System.out.println("Password Should Contain:-\n1.Must have 8 charter minimum \n2.One Upper Case Alphabet \n3.One Lower Case Alphabet \n4.At least one digit and one special character");
+        System.out.print("Password Should Contain:-\n1.Must have 8 charter minimum \n2.One Upper Case Alphabet \n3.One Lower Case Alphabet \n4.At least one digit and one special character");
 
         while (userPasswordFlag)
         {
-            System.out.println("Enter the User Password: ");
+            System.out.print("\nEnter the User Password: ");
             passwordOne = scanner.nextLine();
 
             if (passwordOne.matches("^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=])(?=\\S+$).{8,}$"))
@@ -94,7 +95,7 @@ public class UserDetails
                 //loop will check the second password is same as first password.
                 while (checkSceondPassword)
                 {
-                    System.out.println("\nConfirm the User Password(Type again the Same Password as ABOVE): ");
+                    System.out.print("Confirm the User Password(Type again the Same Password as ABOVE): ");
                     passwordTwo = scanner.nextLine();
 
                     //if the password is same than "BINGO"
@@ -116,7 +117,7 @@ public class UserDetails
             //it checks password has all the stuffs which are required or not.
             else
             {
-                System.out.println("\nINVAILD: Make sure you password may contain these things:-\n1.Must have 8 charter minimum \n2.One Upper Case Alphabet \n3.One Lower Case Alphabet \n4.At least one digit and one special character\n");
+                System.out.print("INVALID Password: Make sure you password may contain these things:-\n1.Must have 8 charter minimum \n2.One Upper Case Alphabet \n3.One Lower Case Alphabet \n4.At least one digit and one special character\n");
                 passwordOne = "";
                 userPasswordFlag=true;
             }
@@ -132,7 +133,7 @@ public class UserDetails
         //Get USer Mail Id from user until its in specified format.
         while (userMailAddFlag)
         {
-            System.out.println("Enter the User Mail ID: ");
+            System.out.print("Enter the User Mail ID: ");
             userEmailID = scanner.nextLine();
 
             //Checks the value of mail address is in the mail format or not. (.+@.+\\\\..+)
@@ -147,7 +148,7 @@ public class UserDetails
             {
                 //invalid response
                 userMailAddFlag = true;
-                System.out.println("\nInvalid email format. Please enter a valid email address.\n");
+                System.out.println("Invalid email format. Please enter a valid email address.");
 
             }
         }
@@ -162,14 +163,14 @@ public class UserDetails
         //Get User Mobile Number from user Until its enter correct or prooper number.
         while (userMobileNoflag)
         {
-            System.out.println("Enter the User Mobile Number(Ten Numbers): ");
+            System.out.print("Enter the User Mobile Number(Ten Numbers): ");
             userMobileNo = scanner.nextLine();
 
             //Checks the value of userMobileNoflag has to be not null and not empty and it has to be ten digits.
             if (!userMobileNo.matches("\\d{10}"))
             {
                 //invalid response
-                System.out.println("\nInvalid mobile number format. Please enter a 10-digit number.\n");
+                System.out.println("Invalid mobile number format. Please enter a 10-digit number.");
                 userMobileNoflag = true;
             }
             //valid respons
@@ -193,8 +194,8 @@ public class UserDetails
             //just to vaild the input from the user
             try
             {
-                System.out.println("Enter the User Anual Income: ");
-                userIncome = scanner.nextDouble();
+                System.out.print("Enter the User Anual Income: $");
+                userIncome = Double.parseDouble(scanner.next());;
 
                 //Income should be greater than zero
                 if (userIncome == 0 || userIncome < 0 )
@@ -211,7 +212,7 @@ public class UserDetails
             }
             catch (NumberFormatException nfe)
             {
-                System.out.println("\nInvalid Income Format. Please enter a valid email address.\n");
+                System.out.println("Invalid Income Format. Please enter a valid email address.\n");
                 userIncomeFlag = true;
             }
         }
@@ -229,8 +230,8 @@ public class UserDetails
             //just to vaild the input from the user
             try
             {
-                System.out.println("Enter the approximately fixed expenses amount: ");
-                userFixedExpense = scanner.nextDouble();
+                System.out.print("Enter the approximately fixed expenses amount(Like: Rent and Food): ");
+                userFixedExpense = Double.parseDouble(scanner.next());
 
                 //Income should be greater than zero
                 if (userFixedExpense == 0 || userFixedExpense < 0 )
@@ -250,6 +251,11 @@ public class UserDetails
                 System.out.println("\nInvalid Amount Format. Please enter a valid email address.\n");
                 userFixedExpenseFlag  = true;
             }
+            catch (Exception e)
+            {
+                System.out.println("\nInvalid Amount Format. Please enter a valid email address. \n"+e.getMessage());
+                userFixedExpenseFlag  = true;
+            }
         }
         //scannerINC.close();
         return userFixedExpense;
@@ -265,8 +271,8 @@ public class UserDetails
             //just to valid the input from the user
             try
             {
-                System.out.println("Enter the approximately fixed expenses amount: ");
-                userVariableExpense = scanner.nextDouble();
+                System.out.print("Enter the approximately variable expenses amount(Like: Entertainment and Miscellaneous): ");
+                userVariableExpense = Double.parseDouble(scanner.next());
 
                 //Income should be greater than zero
                 if (userVariableExpense == 0 || userVariableExpense < 0 )
@@ -323,7 +329,6 @@ public class UserDetails
                 String createSQLQ = "Create Table "+ finalExpenseTableName +" (expense_id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,amount DOUBLE,remaining_income DOUBLE,category VARCHAR(100),expense_desc VARCHAR(200))";
 
                 stmt.executeUpdate(createSQLQ);
-                System.out.println("Table created");
             }
         }
         catch (SQLException e)
