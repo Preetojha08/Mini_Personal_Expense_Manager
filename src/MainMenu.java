@@ -6,6 +6,7 @@ public class MainMenu
 {
     UserInfo userInfo = new UserInfo();
     UserDetails userDetails = new UserDetails();
+    Expense expense = new Expense();
     private static final String JDBC_URL = "jdbc:mysql://localhost:3306/expensemanagerdb";
     private static final String USERNAME = "root";
     private static final String PASSWORD = "Papa@2062";
@@ -136,6 +137,7 @@ public class MainMenu
             stmt = connection.createStatement();
             rs = stmt.executeQuery(selectQuery);
 
+            boolean validateInput = true;
 
             System.out.printf("\n%-10s%-10s%-20s%-15s%-20s%n", "Expense ID", "Amount", "Remaining Income", "Category", "Expense Description");
             while (rs.next())
@@ -148,6 +150,24 @@ public class MainMenu
                 System.out.printf("%-10d%-10.1f%-20.1f%-15s%-20s%n", expenseId, amount, remainingIncome, category, expenseDesc);
             }
 
+            while (validateInput)
+            {
+                System.out.print("\nDo you want the expense data in Excel with Graph (Yes/NO): ");
+                String choiceExcelSheet = scannermm.nextLine();
+
+                if (choiceExcelSheet.equalsIgnoreCase("yes") || choiceExcelSheet.equalsIgnoreCase("no"))
+                {
+                    validateInput = false;
+                    if (choiceExcelSheet.equalsIgnoreCase("yes"))
+                    {
+                        expense.viewExpenseDataExcel();
+                    }
+                }
+                else
+                {
+                    System.out.print("\nInvalid choice. Please enter a valid option.");
+                }
+            }
         }
         catch (SQLException e)
         {

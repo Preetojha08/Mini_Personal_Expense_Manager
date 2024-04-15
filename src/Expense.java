@@ -1,10 +1,16 @@
 import com.mysql.cj.log.Log;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.ss.util.CellRangeAddress;
+import org.apache.poi.xddf.usermodel.chart.*;
+import org.apache.poi.xssf.usermodel.*;
 
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.net.URI;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.Scanner;
 import java.util.logging.Logger;
 
@@ -241,4 +247,82 @@ public class Expense
         }
         return addExpenseDataFlag;
     }
+
+    public void viewExpenseDataExcel()
+    {
+        try (Connection connection = DriverManager.getConnection(JDBC_URL, USERNAME, PASSWORD);
+             Statement statement = connection.createStatement();
+             ResultSet resultSet = statement.executeQuery("SELECT * FROM preet_expensedatatable")) {
+
+            Workbook workbook = new XSSFWorkbook();
+            Sheet sheet = workbook.createSheet("Expense Data");
+            Row headerRow = sheet.createRow(0);
+            headerRow.createCell(0).setCellValue("Expense ID");
+            headerRow.createCell(1).setCellValue("Amount");
+            headerRow.createCell(2).setCellValue("Remaining Income");
+            headerRow.createCell(3).setCellValue("Category");
+            headerRow.createCell(4).setCellValue("Expense Description");
+
+            int rowNum = 1;
+            while (resultSet.next()) {
+                Row row = sheet.createRow(rowNum++);
+                row.createCell(0).setCellValue(resultSet.getInt("expense_id"));
+                row.createCell(1).setCellValue(resultSet.getDouble("amount"));
+                row.createCell(2).setCellValue(resultSet.getDouble("remaining_income"));
+                row.createCell(3).setCellValue(resultSet.getString("category"));
+                row.createCell(4).setCellValue(resultSet.getString("expense_desc"));
+            }
+
+            // Write data to Excel file
+            try (FileOutputStream fileOut = new FileOutputStream("C:\\Users\\devel\\Downloads\\ExpenseData.xlsx")) {
+                workbook.write(fileOut);
+                System.out.println("Expense data has been written to Excel file.");
+                createGraph();
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void createGraph()
+    {
+        try (FileInputStream fis = new FileInputStream("C:\\Users\\devel\\Downloads\\ExpenseData.xlsx");
+             XSSFWorkbook workbook = new XSSFWorkbook(fis)) {
+
+            XSSFSheet sheet = workbook.getSheetAt(0);
+
+            XSSFDrawing drawing = sheet.createDrawingPatriarch();
+            XSSFClientAnchor anchor = drawing.createAnchor(0, 0, 0, 0, 5, 1, 15, 20);
+
+            XSSFChart chart = (XSSFChart) drawing.createChart(anchor);
+            XDDFChartLegend legend = chart.getOrAddLegend();
+            legend.setPosition(LegendPosition.RIGHT);
+
+            XDDFCategoryAxis bottomAxis = chart.createCategoryAxis(AxisPosition.BOTTOM);
+            XDDFValueAxis leftAxis = chart.createValueAxis(AxisPosition.LEFT);
+            leftAxis.setCrosses(AxisCrosses.AUTO_ZERO);
+            leftAxis.setCrossBetween(AxisCrossBetween.BETWEEN);
+
+            XDDFDataSource<String> xs = XDDFDataSourcesFactory.fromStringCellRange(sheet,
+                    new CellRangeAddress(1, sheet.getLastRowNum(), 0, 0));
+            XDDFNumericalDataSource<Double> ys = XDDFDataSourcesFactory.fromNumericCellRange(sheet,
+                    new CellRangeAddress(1, sheet.getLastRowNum(), 1, 1));
+
+            XDDFLineChartData data = (XDDFLineChartData) chart.createData(ChartTypes.LINE, bottomAxis, leftAxis);
+            XDDFLineChartData.Series series = (XDDFLineChartData.Series) data.addSeries(xs, ys);
+            series.setTitle("Expense Data", null);
+
+            chart.plot(data);
+
+            try (FileOutputStream fileOut = new FileOutputStream("C:\\Users\\devel\\Downloads\\ExpenseData.xlsx")) {
+                workbook.write(fileOut);
+                System.out.println("Expense graph has been created successfully.");
+            }
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
 }
