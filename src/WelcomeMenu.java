@@ -1,8 +1,6 @@
-import com.mysql.cj.log.Log;
 
 import java.sql.*;
 import java.util.Scanner;
-import java.util.logging.Logger;
 
 public class WelcomeMenu
 {
@@ -10,7 +8,6 @@ public class WelcomeMenu
     UserDetails usersdetails = new UserDetails();
     UserLoan userLoan = new UserLoan();
 
-    Log log ;
     private static final String JDBC_URL = "jdbc:mysql://localhost:3306/expensemanagerdb";
     private static final String USERNAME = "root";
     private static final String PASSWORD = "Papa@2062";
@@ -38,7 +35,7 @@ public class WelcomeMenu
             Scanner scanner = new Scanner(System.in);
 
             System.out.print("Enter Username: ");
-            String username = scanner.nextLine();
+            String username = scanner.nextLine().trim();
 
             System.out.print("Enter Password: ");
             String password = scanner.nextLine();
@@ -74,52 +71,47 @@ public class WelcomeMenu
 
     public boolean userRegistration()
     {
-        boolean userResgistrationStatus = false;
-        try
-        {
-            //make a connection with db
+        boolean userRegistrationStatus = false;
+        try {
+            // Make a connection with the database
             connection = DriverManager.getConnection(JDBC_URL, USERNAME, PASSWORD);
 
-            //Take User values for registration
+            // Take User values for registration
             String Uname = usersdetails.getUserName();
             String UmobileNo = usersdetails.getUserMobileNo();
             String Uemail = usersdetails.getUserEmailID();
-            String Upassword = usersdetails.getUserPassword();
             double Uincome = usersdetails.getUserIncome();
-            String Uloan = usersdetails.getUserLoan();
             double UfixedExpense = usersdetails.getUserFixedExpense();
             double UvarExpense = usersdetails.getUserVariableExpense();
+            String Uloan = usersdetails.getUserLoan();
+            String Upassword = usersdetails.getUserPassword();
+            String UID = "";
 
-            if (Uloan.equalsIgnoreCase("y") || Uloan.equalsIgnoreCase("Yes"))
-            {
-                System.out.println("Loan Information\n");
+            if (Uloan.equalsIgnoreCase("y") || Uloan.equalsIgnoreCase("Yes")) {
+                System.out.print("\nLoan Information\n");
                 double loanAmount = userLoan.getLoanAmount();
                 double loanPendingAmount = userLoan.getLoanPendingAmount();
                 double loanPaidAmount = loanAmount - loanPendingAmount;
 
-                String loanInsertQuery = "INSERT INTO loan (username,mobile_number,loan_amount,pending_amount,paid_amount) "+ "VALUES(?, ?, ?, ?, ?)";
+                // Insert loan information
+                String loanInsertQuery = "INSERT INTO loan (username, mobile_number, loan_amount, pending_amount, paid_amount, monthly_installment) VALUES (?, ?, ?, ?, ?, ?)";
                 ps = connection.prepareStatement(loanInsertQuery);
                 ps.setString(1, Uname);
                 ps.setString(2, UmobileNo);
                 ps.setDouble(3, loanAmount);
                 ps.setDouble(4, loanPendingAmount);
                 ps.setDouble(5, loanPaidAmount);
-
+                ps.setDouble(6, userLoan.getLoanMonthlyInstallment());
                 int rowsAffected = ps.executeUpdate();
 
-                if (rowsAffected > 0)
-                {
-                    log.logDebug("Data added Successfully to Loan Table");
+                if (rowsAffected > 0) {
+                    System.out.println("Loan Information Added");
                 }
-
             }
-            String prefixET = "_expensedatatable";
-            String expensetable = Uname.toLowerCase()+prefixET;
 
-            String insertQuery = "INSERT INTO User (username, userpassword, usermobile_no, usermail, userincome, userloan, userexpensetable,fixed_expense,var_expense) " +
-                    "VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?)";
-
-            //Creating a Prepared statement object
+            // Insert user details
+            String insertQuery = "INSERT INTO User (username, userpassword, usermobile_no, usermail, userincome, userloan, fixed_expense, var_expense) " +
+                    "VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
             ps = connection.prepareStatement(insertQuery);
             ps.setString(1, Uname);
             ps.setString(2, Upassword);
@@ -127,49 +119,55 @@ public class WelcomeMenu
             ps.setString(4, Uemail);
             ps.setDouble(5, Uincome);
             ps.setString(6, Uloan);
-            ps.setString(7, expensetable);
-            ps.setDouble(8, UfixedExpense);
-            ps.setDouble(9, UvarExpense);
-
-            // Executing the insertion query
+            ps.setDouble(7, UfixedExpense);
+            ps.setDouble(8, UvarExpense);
             int rowsAffected = ps.executeUpdate();
-            if (rowsAffected > 0)
-            {
-                System.out.println("Thank You "+Uname+", for Registration Now Login with that INFO");
-                userResgistrationStatus=true;
-                usersdetails.createExpenseTable(Uname,Upassword,Uemail,UmobileNo);
-            }
-            else
-            {
+
+            if (rowsAffected > 0) {
+                // Retrieve user_id
+                String selectUserIdQuery = "SELECT uid FROM user WHERE username = ?";
+                PreparedStatement selectUserIdStatement = connection.prepareStatement(selectUserIdQuery);
+                selectUserIdStatement.setString(1, Uname);
+                ResultSet userIdResultSet = selectUserIdStatement.executeQuery();
+                if (userIdResultSet.next()) {
+                    UID = userIdResultSet.getString("uid");
+                }
+                userIdResultSet.close();
+                selectUserIdStatement.close();
+
+                // Concatenate username and user_id to form the userexpensetable name
+                String Expenstablename = Uname.trim() + UID.trim() + "_expensetable";
+
+                // Insert userexpensetable value along with user_id
+                String insertExpenseTableQuery = "UPDATE user SET userexpensetable = ? WHERE uid = ?";
+                PreparedStatement insertExpenseTableStatement = connection.prepareStatement(insertExpenseTableQuery);
+                insertExpenseTableStatement.setString(1, Expenstablename);
+                insertExpenseTableStatement.setString(2, UID);
+                insertExpenseTableStatement.executeUpdate();
+
+                System.out.println("Thank You " + Uname + ", for Registration. Now Login with that INFO");
+                userRegistrationStatus = true;
+                usersdetails.createExpenseTable(Uname, Upassword, Uemail, UmobileNo);
+            } else {
                 System.out.println("Failed to Register new User.");
-                userResgistrationStatus=false;
+                userRegistrationStatus = false;
             }
-        }
-        catch (SQLException e)
-        {
-            //e.printStackTrace();
+        } catch (SQLException e) {
+            e.printStackTrace();
             e.getMessage();
-        }
-        finally
-        {
-            try
-            {
-                if (ps != null)
-                {
+        } finally {
+            try {
+                if (ps != null) {
                     ps.close();
                 }
-                if (connection != null)
-                {
+                if (connection != null) {
                     connection.close();
                 }
-            }
-            catch (SQLException e)
-            {
-                //e.printStackTrace();
+            } catch (SQLException e) {
                 e.getMessage();
             }
         }
-        return userResgistrationStatus;
+        return userRegistrationStatus;
     }
 
     public void getUserInformation(String username,String password)
@@ -194,6 +192,8 @@ public class WelcomeMenu
                 userInfo.setUserLoan(rs.getString("userloan"));
                 userInfo.setUserExpenseTable(rs.getString("userexpensetable"));
                 userInfo.setUserID(rs.getString("uid"));
+                userInfo.setUserFixedExpense(rs.getDouble("fixed_expense"));
+                userInfo.setUserVarExpense(rs.getDouble("var_expense"));
             }
             // Clean-up environment
             rs.close();

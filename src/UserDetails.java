@@ -20,24 +20,31 @@ public class UserDetails
     {
         String userLoan = "";
         boolean userLoanFlag = true;
-        while(userLoanFlag)
+        do
         {
-            System.out.print("Do You have any kind of Loan(Yes/NO):");
-            String userLoan1 = scanner.nextLine();
+            String userLoanInput="";
+            System.out.print("Do you have any kind of loan? (Yes/No): ");
+            try
+            {
+                userLoanInput = scanner.nextLine();
+            }
+            catch (Exception e)
+            {
+                e.printStackTrace();
+            }
 
-            //check the loan user inpu must be yes or no nothing else.
-            if(userLoan1.equalsIgnoreCase("Yes") || userLoan1.equalsIgnoreCase("NO") || userLoan.equalsIgnoreCase("Y") || userLoan.equalsIgnoreCase("Yes"))
+
+            if (userLoanInput.equalsIgnoreCase("Yes") || userLoanInput.equalsIgnoreCase("No"))
             {
                 userLoanFlag = false;
-                userLoan = userLoan1;
+                userLoan = userLoanInput;
             }
             else
             {
-                //invalid response
-                System.out.print("\nInvaild Entry for Loan (Just type Yes/No)\n");
-                userLoanFlag = true;
+                // Invalid response
+                System.out.println("\nInvalid entry for loan. Please type Yes or No.");
             }
-        }
+        } while (userLoanFlag);
         return userLoan;
     }
 
@@ -50,7 +57,7 @@ public class UserDetails
         while (userNameflag)
         {
             System.out.print("\nEnter the User Name: ");
-            userName = scanner.nextLine();
+            userName = scanner.nextLine().trim();
 
             //checks the value of userName has to be not null and not empty and does not contain numbers in it.
             if (userName == null || userName.length() == 0 || userName.length() == 1 || !userName.matches("^[^0-9]+$"))
@@ -85,7 +92,7 @@ public class UserDetails
         while (userPasswordFlag)
         {
             System.out.print("\nEnter the User Password: ");
-            passwordOne = scanner.nextLine();
+            passwordOne = scanner.nextLine().trim();
 
             if (passwordOne.matches("^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=])(?=\\S+$).{8,}$"))
             {
@@ -96,7 +103,7 @@ public class UserDetails
                 while (checkSceondPassword)
                 {
                     System.out.print("Confirm the User Password(Type again the Same Password as ABOVE): ");
-                    passwordTwo = scanner.nextLine();
+                    passwordTwo = scanner.nextLine().trim();
 
                     //if the password is same than "BINGO"
                     if (passwordOne.equals(passwordTwo))
@@ -134,7 +141,7 @@ public class UserDetails
         while (userMailAddFlag)
         {
             System.out.print("Enter the User Mail ID: ");
-            userEmailID = scanner.nextLine();
+            userEmailID = scanner.nextLine().trim();
 
             //Checks the value of mail address is in the mail format or not. (.+@.+\\\\..+)
             if (userEmailID.matches("^[a-zA-Z0-9_!#$%&*+/=?`{|}~^.-]+@[a-zA-Z0-9.-]+$"))
@@ -164,7 +171,7 @@ public class UserDetails
         while (userMobileNoflag)
         {
             System.out.print("Enter the User Mobile Number(Ten Numbers): ");
-            userMobileNo = scanner.nextLine();
+            userMobileNo = scanner.nextLine().trim();
 
             //Checks the value of userMobileNoflag has to be not null and not empty and it has to be ten digits.
             if (!userMobileNo.matches("\\d{10}"))

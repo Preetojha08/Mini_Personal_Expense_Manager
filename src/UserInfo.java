@@ -1,7 +1,6 @@
 public class UserInfo
 {
 
-
     private static String userName;
     private static String userPassword;
     private static String userEmail;

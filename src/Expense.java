@@ -21,10 +21,11 @@ public class Expense
     private static final String USERNAME = "root";
     private static final String PASSWORD = "Papa@2062";
     private static Scanner scanner = new Scanner(System.in);
-    Log log;
-    double UpdatedIncome = 0;
+
     Connection conn = null;
+    Statement statement = null;
     PreparedStatement ps = null;
+    ResultSet rs = null;
 
     public Expense()
     {
@@ -70,7 +71,7 @@ public class Expense
             try
             {
                 System.out.print("\nEnter the Expense Amount: $");
-                expenseAmount = scanner.nextDouble();
+                expenseAmount = Double.parseDouble(scanner.next());
 
                 if (expenseAmount < 0)
                 {
@@ -144,14 +145,11 @@ public class Expense
             ps.executeUpdate();
 
             int rowsUpdated = ps.executeUpdate();
-            if (rowsUpdated > 0)
-            {
-                log.logDebug("Income updated successfully for " +name);
-            }
-            else
+            if (!(rowsUpdated > 0 ))
             {
                 System.out.println("No user found with " + name);
             }
+
 
         }
         catch (SQLException e)
@@ -218,7 +216,6 @@ public class Expense
                 System.out.println("Failed to add new Expense.");
 
             }
-
         }
         catch (SQLException e)
         {
@@ -324,5 +321,58 @@ public class Expense
             e.printStackTrace();
         }
     }
+
+    public double getTotalAmountFixedCAT()
+        {
+        double fixedAmount=0;
+        try
+        {
+            conn = DriverManager.getConnection(JDBC_URL,USERNAME,PASSWORD);
+            String tablename = userInfo.getUserExpenseTable();
+            String selectQuery = "SELECT SUM(amount) AS TotalAmount FROM " +tablename+ " WHERE Category = 'Fixed Exp'";
+            statement = conn.createStatement();
+            rs =statement.executeQuery(selectQuery);
+            if (rs.next())
+            {
+                fixedAmount = rs.getDouble("TotalAmount");
+            }
+            else
+            {
+                System.out.println("No fixed expenses found.");
+            }
+        }
+        catch (SQLException e)
+        {
+            e.printStackTrace();
+        }
+        return fixedAmount;
+    }
+
+    public double getTotalAmountVariableCAT()
+    {
+        double VariableAmount=0;
+        try
+        {
+            conn = DriverManager.getConnection(JDBC_URL,USERNAME,PASSWORD);
+            String tablename = userInfo.getUserExpenseTable();
+            String selectQuery = "SELECT SUM(amount) AS TotalAmount FROM " +tablename+ " WHERE Category = 'Variable Exp'";
+            statement = conn.createStatement();
+            rs =statement.executeQuery(selectQuery);
+            if (rs.next())
+            {
+                VariableAmount = rs.getDouble("TotalAmount");
+            }
+            else
+            {
+                System.out.println("No fixed expenses found.");
+            }
+        }
+        catch (SQLException e)
+        {
+            e.printStackTrace();
+        }
+        return VariableAmount;
+    }
+
 
 }
