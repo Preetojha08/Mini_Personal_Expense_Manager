@@ -98,10 +98,10 @@ public class Main
             System.out.println("1. Update User Details"); //User Details will be updated here(like name , mobile no,email) And it will also update income and fixed and variable expense will be updated here .
             System.out.println("2. Add Expense"); //Add expense what and how much you send on something
             System.out.println("3. View Transaction History"); //view the entire transaction history of expense with its details with income information
-            System.out.println("4. Saving"); //View the budget planning information or steps and tips to save money
-            System.out.println("5. Budget Planning Tips"); //just back to pervious menu
-            System.out.println("6. Logout"); //just back to pervious menu
-            System.out.println("7. Exit from the Program"); //shut down the program.
+            //System.out.println("4. Saving"); //View the budget planning information or steps and tips to save money
+            System.out.println("4. Budget Planning Tips"); //just back to pervious menu
+            System.out.println("5. Logout"); //just back to pervious menu
+            System.out.println("6. Exit from the Program"); //shut down the program.
 
             try
             {
@@ -143,7 +143,7 @@ public class Main
                         break;
                     case 5:
                         //budgetPlanning();
-                        System.out.println("View Budget Planning Tips comes here");
+                        mainmenu.BudgetPlanning();
                         break;
                     case 6:
                         //logout();
