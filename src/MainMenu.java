@@ -184,6 +184,16 @@ public class MainMenu
 
     public void BudgetPlanning()
     {
+        System.out.println("\nOf Course! Here are Some Budget Planning Tips:");
+        System.out.println();
+        System.out.println("1. Track Your Expenses: Monitor your spending habits to understand where your money is going.");
+        System.out.println("2. Set Financial Goals: Define clear objectives for your finances, such as saving for a vacation or paying off debt.");
+        System.out.println("3. Create a Budget: Develop a budget that allocates your income towards essential expenses, savings, and discretionary spending.");
+        System.out.println("4. Prioritize Spending: Distinguish between needs and wants, prioritizing essential expenses while limiting non-essential spending.");
+        System.out.println("5. Regularly Review: Review your budget regularly to ensure you're on track with your financial goals and make adjustments as needed.");
+        System.out.println("6. Build an Emergency Fund: Set aside funds for unexpected expenses to avoid financial strain during emergencies.");
+        System.out.println("7. Automate Savings: Automate transfers to your savings account to consistently build your savings over time.");
+        System.out.println("8. Reduce Debt: Focus on paying off high-interest debt to free up more money for savings and investments.");
 
     }
 
