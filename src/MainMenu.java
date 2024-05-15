@@ -108,7 +108,7 @@ public class MainMenu
     {
         Scanner scanner = new Scanner(System.in);
 
-        System.out.println("\nSelect What you Want to Edit");
+        System.out.println("\nSelect, Which Information about you want to edit");
         System.out.println("1. Name: "+userInfo.getUserName());
         System.out.println("2. Mobile No: "+userInfo.getUserPhone());
         System.out.println("3. Email: "+userInfo.getUserEmail());
